@@ -49,6 +49,7 @@ public class MyListenerService extends GcmListenerService{
                 .setContentText(msg)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentIntent(pendingIntent);
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(

@@ -33,7 +33,7 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(
@@ -49,9 +49,10 @@ public class RegistrationIntentService extends IntentService {
             //subscribe to topic channels
             subscribeTopics(token);
 
-            prefs.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, true);
+            prefs.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, true).commit();
+            Log.i(TAG, "Saved to preferences");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "Failed to complete token refresh\nError:\n" + e.getMessage());
             prefs.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
@@ -63,10 +64,11 @@ public class RegistrationIntentService extends IntentService {
     }
 
     private void sendRegistrationToServer(String token){
-
+        Log.i(TAG, "Sending to server token: " + token);
     }
 
     private void subscribeTopics(String token) throws IOException{
+        Log.i(TAG, "Subscribing to topics");
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
                 for(String topic: TOPICS){
                     pubSub.subscribe(token, "/topics/"+topic, null);
